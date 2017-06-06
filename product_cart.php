@@ -74,6 +74,7 @@
 
             $money = 1234;
 
+			$distance_count = get_distance($type,$to,$from);
 
 
 
@@ -95,6 +96,8 @@
                    'twoman'                            => $twoman,
 
                    'money'                             => $money,
+
+				   'distance'							=> $distance_count,
 
                    'date'                              => $date,
 
@@ -275,7 +278,107 @@
     
 
     
+	function get_distance($vehicle,$addTo,$addFrom){
+		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
+			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
+
+			if ($mysqli->connect_errno) {
+
+				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+
+			}
+
+			$addressFrom = urlencode($addFrom);
+
+			$addressTo = urlencode(trim($addTo));
+
+			$rjourny = '';
+
+			/*this is addressTo */
+			$str_adrsz_to = preg_replace('/[+]/s','', $addressTo);
+			$str_count_addr5 = strlen($str_adrsz_to);
+			if($str_count_addr5 == 1){
+				$deduct = 0;
+			}else if($str_count_addr5 == 2){
+				$deduct = 0;
+			}else if($str_count_addr5 == 3){
+				$deduct = 0;
+			}else if($str_count_addr5 == 4){
+				$deduct = 1;
+			}else if($str_count_addr5 == 5){
+				$deduct = 2;
+			}else if($str_count_addr5 == 6){
+				$deduct = 3;
+			}else if($str_count_addr5 == 7){
+				$deduct = 4;
+			}
+			$str_count_addr3 = $str_count_addr5-$deduct;
+			$cutaddressTo = substr($str_adrsz_to,0,$str_count_addr3);
+			/*this is addressTo */
+
+			/*this is addressfrom */
+
+			$str_adrsz_from = preg_replace('/[+]/s','', $addressFrom);
+			
+			$str_count_addr = strlen($str_adrsz_from);
+			$str_count_addr2 = $str_count_addr-3;
+
+			$cutaddressFrom = substr($str_adrsz_from,0,$str_count_addr2);
+				
+
+			/*this is addressfrom */
+			//echo "<br />";
+			$quwery = "SELECT * FROM collection_surcharge where vehicle_id='$vehicle' AND postal_codes = '$cutaddressFrom'";
+			$query_check_collectionsurcharge = mysqli_query($mysqli,$quwery);
+			$fetch_collectionsurcharge = mysqli_fetch_array($query_check_collectionsurcharge);
+
+			$get_rows_count_collection = mysqli_num_rows($query_check_collectionsurcharge);
+			$msg="";
+
+			$clen = strlen($cutaddressFrom);
+			
+			$allow_from_other_collection = true;
+
+			$query_allow_get = "SELECT allow_other_collection FROM  col_option WHERE id=1 ; ";
+			$allow_value = mysqli_fetch_array(mysqli_query($mysqli,$query_allow_get));
+			$allow_from_other_collection = ($allow_value['allow_other_collection']== 1 ) ? true :false ; 
+			
+			if((!$get_rows_count_collection) && $allow_from_other_collection){
+
+				while((!$get_rows_count_collection) && ($clen >= 0) ){
+					$cutaddressFrom2 = substr($cutaddressFrom,0,$clen);
+					
+					$quwery2 = "SELECT * FROM collection_surcharge where postal_codes like '%$cutaddressFrom2%'";
+					$query_check_collectionsurcharge = mysqli_query($mysqli,$quwery2);
+					$fetch_collectionsurcharge = mysqli_fetch_array($query_check_collectionsurcharge);
+
+					$get_rows_count_collection = mysqli_num_rows($query_check_collectionsurcharge);	
+					$clen = $clen-1;
+				}
+
+				$msg = "Surcharge fee for ".$cutaddressFrom." not active in database.<br>";
+			}		
+
+			$collection_surcharge = $fetch_collectionsurcharge['price'];
+			if($clen <=1) $collection_surcharge = 0;
+
+		
+			$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$addressFrom&destinations=$addressTo&language=en-EN&sensor=false");
+			$data = json_decode($data);
+			
+			$time = 0;
+			$distance = 0;
+			
+			foreach($data->rows[0]->elements as $road) {
+				$time += $road->duration->value;
+				$distance += $road->distance->value;
+			}
+			//echo "Total Miles:";
+			$mile = round($distance/1609.34,2);
+			return $mile;
+
+	}
 
 
 		function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
