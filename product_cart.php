@@ -70,7 +70,17 @@
 
             $delivery_company_close_time        = urlencode($_POST['delivery_company_close_time']);
 
-        
+        	$full_description_of_goods = urlencode($_POST['full_description_of_goods']);
+
+        	$length = urlencode($_POST['length']);
+
+        	$width = urlencode($_POST['width']);
+
+        	$height = urlencode($_POST['height']);
+
+        	$depth = urlencode($_POST['depth']);
+
+        	$weight = urlencode($_POST['weight']);
 
             $money = 1234;
 
@@ -145,7 +155,19 @@
 
                    'delivery_contact_email_address'    => $delivery_contact_email_address,
 
-                   'delivery_company_close_time'       => $delivery_company_close_time
+                   'delivery_company_close_time'       => $delivery_company_close_time,
+
+                   'full_description_of_goods'			=> $full_description_of_goods,
+
+                   'length' 							=>	$length,
+
+                   'width' 								=>	$width,
+
+                   'height' 							=>	$height,
+
+                   'depth' 								=>	$depth,
+                   
+                   'weight' 							=> $weight
 
 
 

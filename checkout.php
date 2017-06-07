@@ -437,7 +437,7 @@
 
 
 		// SERVICE KEY IN THIS
-		$worldpay = new Worldpay('T_S_933cae1b-72f2-48f2-9afe-10b75824ea11');
+		$worldpay = new Worldpay('T_S_13ff3d30-75d1-44ab-82c0-8e84b7d50658');
 
 		$worldpay->disableSSLCheck(true);
 
@@ -531,7 +531,7 @@
 
 		   		    foreach ($_SESSION['data'] as $key => $value) {
 
-		   		    	$query = "INSERT INTO `orders`(`fullname`, `address`, `package`, `from`, `to`, `type`, `twoman`, `dtime`, `instruction`, `invoice_company_name`, `booking_contact_name`, `invoice_company_account_no`, `booking_contact_mobile_number`, `email_address_for_invoice_1`, `email_address_for_invoice_2`, `full_collection_company_name`, `full_address_for_collection`, `collection_postcode`, `collection_contact_name`, `collection_contact_phone_number`, `collection_contact_email_address`, `collection_time`, `image_required`, `full_delivery_company_name`, `full_address_for_delivery`, `delivery_postcode`, `delivery_contact_name`, `delivery_contact_phone_number`, `delivery_contact_mobile_number`, `delivery_contact_email_address`, `delivery_company_close_time`,`money`,`distant`) VALUES ('".$_POST['cartname']."', '".$_POST['address1']."', '".$value['package']."', '".$value['from']."', '".$value['to']."', '".$value['type']."', '".$value['twoman']."', '".date("y-m-d", strtotime($value['date']))."', '".$value['instruction']."', '".$value['invoice_company_name']."', '".$value['booking_contact_name']."', '".$value['invoice_company_account_no']."', '".$value['booking_contact_mobile_number']."', '".$value['email_address_for_invoice_1']."', '".$value['email_address_for_invoice_2']."', '".$value['full_collection_company_name']."', '".$value['full_address_for_collection']."', '".$value['collection_postcode']."', '".$value['collection_contact_name']."', '".$value['collection_contact_phone_number']."', '".$value['collection_contact_email_address']."', '".$value['collection_time']."', '".$value['image_required']."', '".$value['full_delivery_company_name']."', '".$value['full_address_for_delivery']."', '".$value['delivery_postcode']."', '".$value['delivery_contact_name']."', '".$value['delivery_contact_phone_number']."', '".$value['delivery_contact_mobile_number']."', '".$value['delivery_contact_email_address']."', '".$value['delivery_company_close_time']." ', '".calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])."','".get_distance($value['type'],$value['to'],$value['from'])." ') ;";
+		   		    	$query = "INSERT INTO `orders`(`fullname`, `address`, `package`, `from`, `to`, `type`, `twoman`, `dtime`, `instruction`, `invoice_company_name`, `booking_contact_name`, `invoice_company_account_no`, `booking_contact_mobile_number`, `email_address_for_invoice_1`, `email_address_for_invoice_2`, `full_collection_company_name`, `full_address_for_collection`, `collection_postcode`, `collection_contact_name`, `collection_contact_phone_number`, `collection_contact_email_address`, `collection_time`, `image_required`, `full_delivery_company_name`, `full_address_for_delivery`, `delivery_postcode`, `delivery_contact_name`, `delivery_contact_phone_number`, `delivery_contact_mobile_number`, `delivery_contact_email_address`, `delivery_company_close_time`,`money`,`distant`, `full_description_of_goods`, `length`, `width`, `height`, `depth`, `weight`) VALUES ('".$_POST['cartname']."', '".$_POST['address1']."', '".$value['package']."', '".$value['from']."', '".$value['to']."', '".$value['type']."', '".$value['twoman']."', '".date("y-m-d", strtotime($value['date']))."', '".$value['instruction']."', '".$value['invoice_company_name']."', '".$value['booking_contact_name']."', '".$value['invoice_company_account_no']."', '".$value['booking_contact_mobile_number']."', '".$value['email_address_for_invoice_1']."', '".$value['email_address_for_invoice_2']."', '".$value['full_collection_company_name']."', '".$value['full_address_for_collection']."', '".$value['collection_postcode']."', '".$value['collection_contact_name']."', '".$value['collection_contact_phone_number']."', '".$value['collection_contact_email_address']."', '".$value['collection_time']."', '".$value['image_required']."', '".$value['full_delivery_company_name']."', '".$value['full_address_for_delivery']."', '".$value['delivery_postcode']."', '".$value['delivery_contact_name']."', '".$value['delivery_contact_phone_number']."', '".$value['delivery_contact_mobile_number']."', '".$value['delivery_contact_email_address']."', '".$value['delivery_company_close_time']." ', '".calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])."','".get_distance($value['type'],$value['to'],$value['from'])."', '".$value['full_description_of_goods']."', '".$value['length']."', '".$value['width']."', '".$value['height']."', '".$value['depth']."', '".$value['weight']."') ;";
 
 		   		    	
 
@@ -558,7 +558,7 @@
 								            <label for=""><b>Billing Address:</b><span style="float:right;">'.urldecode($_POST['address1']).'</span></label><br />
 								            <label for=""><b>To:</b><span style="float:right;">'.urldecode($value['to']).'</span></label><br />
 								            <label for=""><b>Date:</b><span style="float:right;">'.urldecode($value['date']).'</span></label><br />
-								            <label for=""><b>Cost:</b><span style="float:right;"> £'.urldecode(calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])).'</span></label><br />
+								            <label for=""><b>Cost:</b><span style="float:right;">'.urldecode(calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])).'</span>GBP</label><br />
 								        </div>
 								    </div>
 								    
@@ -608,7 +608,7 @@
 						$headers .= "Content-Type: text/html;charset=iso-8859-1\r\n";
 						$headers  .= 'MIME-Version: 1.0' . "\r\n";
 						mail($to,$subject,$message,$headers);
-						mail('simon@melonsauce.com',$subject,$message,$headers);
+						mail('simon@kilocreative.com',$subject,$message,$headers);
 					}
 
 					unset($_SESSION['data']);
@@ -1394,7 +1394,7 @@
 
       Worldpay.useOwnForm({
 
-        'clientKey': 'T_C_b697fa5a-5057-46f7-ae60-c7455b71d8c1',
+        'clientKey': 'T_C_beab127d-8991-4a1f-8cff-7f7daea645d2',
 
         'form': form,
 
