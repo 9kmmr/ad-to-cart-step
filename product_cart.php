@@ -5,7 +5,7 @@
 	
 
 	$count=0;
-
+	 $cookie_name = "cart_data";
 	if (isset($_POST['dfrom'])){
 
             $name = urlencode($_POST['package']);
@@ -74,10 +74,6 @@
 
             $money = 1234;
 
-			$distance_count = get_distance($type,$to,$from);
-
-
-
 
             $_SESSION['data'][count($_SESSION['data'])] = 
 
@@ -97,7 +93,7 @@
 
                    'money'                             => $money,
 
-				   'distance'							=> $distance_count,
+				   
 
                    'date'                              => $date,
 
@@ -155,20 +151,26 @@
 
              ];
 
-            $cookie_name = "cart_data";
+            /*$cookie_name = "cart_data";
 
             $cookie_value = $_SESSION['data'];       
 
-            setcookie($cookie_name, base64_encode(serialize($cookie_value)), time() + (86400), "/"); // 86400 = 1 day
+            setcookie($cookie_name, base64_encode(serialize($cookie_value)), time() + (86400), "/"); // 86400 = 1 day*/
 
         }
 
 	// delete cart
 
 	if (isset($_GET['deleteid'])){
-
+		
 		unset($_SESSION['data'][$_GET['deleteid']]);
 
+		/*if(isset($_COOKIE[$cookie_name])) {
+			setcookie($cookie_name, "", time() - 3600,"/");
+			$cookie_value = $_SESSION['data'];
+
+        	setcookie($cookie_name, base64_encode(serialize($cookie_value)), time() + (86400), "/"); // 86400 = 1 day
+			}*/
 		echo "<script>window.location = '".substr($_SERVER[REQUEST_URI], 0, strrpos($_SERVER[REQUEST_URI], "/"))."/';</script>";
 
 	}
@@ -176,25 +178,20 @@
 	// add to this cart
 
 
-
+/*
     if (count($_SESSION['data'])<=0){
 
         if(isset($_COOKIE[$cookie_name])) {
 
             $_SESSION['data'] = unserialize(base64_decode($_COOKIE[$cookie_name]));
 
-            setcookie($cookie_name, "", time() - 3600);
+            setcookie($cookie_name, "", time() - 3600,"/");
 
         }
-
-    }
+    }*/
 
     $count = count( $_SESSION['data']);
-
-
-
     // update cart
-
  	if (isset($_POST['update'])){
 
  		
@@ -218,14 +215,14 @@
  	}
 
 
-
+ 	/*
  	if(isset($_COOKIE[$cookie_name])) {		
 
  		if (count($_SESSION['data'])<=0){
 
  			$_SESSION['data'] = unserialize(base64_decode($_COOKIE[$cookie_name]));
 
- 			setcookie($cookie_name, "", time() - 3600);
+ 			setcookie($cookie_name, "", time() - 3600,"/");
 
  		}
 
@@ -242,7 +239,7 @@
     	}
 
     }
-
+	*/
     function checktype($val){
 
     	switch ($val) {
