@@ -8,9 +8,9 @@
 
 <?php 
 
-		get_header();
+	get_header();
 
-		function get_distance($vehicle,$addTo,$addFrom){
+	function get_distance($vehicle,$addTo,$addFrom){
 		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
 			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
@@ -110,7 +110,7 @@
 			$mile = round($distance/1609.34,2);
 			return $mile ;
 	}
-		function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
+	function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
 
 			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
@@ -417,11 +417,11 @@
 
 			return $total_val;
 
-		}
+	}
 
-		$total_money = 0;
-		$total_distance = 0;
-		if (count($_SESSION['data'])){
+	$total_money = 0;
+	$total_distance = 0;
+	if (count($_SESSION['data'])){
 
 			foreach ($_SESSION['data'] as $key => $value) {
 
@@ -429,12 +429,14 @@
 				$total_distance += get_distance($value['type'],$value['to'],$value['from']);
 			}
 
-		}
+	}
 
-		
+	if (isset($_POST['finish'])){
 
 		require_once(plugin_dir_path( __FILE__ ).'init.php');
 
+
+		// SERVICE KEY IN THIS
 		$worldpay = new Worldpay('T_S_933cae1b-72f2-48f2-9afe-10b75824ea11');
 
 		$worldpay->disableSSLCheck(true);
@@ -482,7 +484,7 @@
 		try {
 
 			//if ($orderType != 'APM') {
-
+				// CREATE ORDER
 		   		$response = $worldpay->createOrder(array(
 
 		   		    'token' => isset($_POST['token']) ? $_POST['token'] : '',
@@ -538,9 +540,10 @@
 		   		    }		   		    
 
 		   		    unset($_SESSION['data']);
-		   		    unset($_COOKIE['cart_data']);
+		   		    session_destroy();
+		   		    /*$cookie_name = "cart_data";
 					// empty value and expiration one hour before
-					setcookie('cart_data', '', time() - 3600);
+					 setcookie($cookie_name, "", time() - 3600,"/");*/
 
 		   		    echo "<script> window.location = '".substr($_SERVER[REQUEST_URI], 0, strrpos($_SERVER[REQUEST_URI], "/"))."/complete-checkout';</script>";
 
@@ -678,8 +681,6 @@
 
 		} catch (WorldpayException $e) {
 
-			
-
 		 // echo 'Error code: ' .$e->getCustomCode() .'
 
 		    //HTTP status code:' . $e->getHttpStatusCode() . '
@@ -695,6 +696,7 @@
 		    echo 'Error message: '. $e->getMessage();
 
 		}
+	}
 
 	
 
@@ -1038,7 +1040,7 @@
 
 		                                <input type='button' class='btn btn-next btn-fill btn-warning btn-wd' name='next' value='Next' />
 
-		                                <input type='submit' class='btn btn-finish btn-fill btn-warning btn-wd' name='finish' value='Finish' />
+		                                <input type='submit' class='btn btn-finish btn-fill btn-warning btn-wd' name='finish' value='Finish' id="finish" />
 
 		                            </div>
 
@@ -1317,7 +1319,7 @@
 
 
 
-
+       if ($("#finish")).click(function(){
       var form = document.getElementById('my-payment-form');
 
 
@@ -1351,6 +1353,7 @@
         }
 
       });
+  });
 
     </script>
 
