@@ -6,7 +6,7 @@
 
 	$count=0;
 	$cookie_name = "cart_data";
-
+	$transaction = "CC";
 	if(isset($_POST['payment'])){
   
 	  	$response = $_POST["g-recaptcha-response"];
@@ -1150,10 +1150,10 @@
 
 	</form>
 
-	<form action="<?=get_home_url()."/check-out-express" ?>" method="POST">
+	<form action="<?php if ($transaction=="CC") echo get_home_url()."/check-out-express" ; else echo get_home_url()."/complete-checkout";  ?>" method="POST">
 
 		<table>
-		<input type="submit" name="checkout" value="Proceed to Checkout" class="btn btn-success pull-left">	
+		<input type="submit" name="checkout" value="<?=($transaction=="CC")?'Proceed to Checkout':'Complete Your Orders' ?>" class="btn btn-success pull-left">	
 
 		</table>	
 
