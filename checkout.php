@@ -531,7 +531,7 @@
 
 		   		    foreach ($_SESSION['data'] as $key => $value) {
 
-		   		    	$query = "INSERT INTO `orders`(`fullname`, `address`, `package`, `from`, `to`, `type`, `twoman`, `dtime`, `instruction`, `invoice_company_name`, `booking_contact_name`, `invoice_company_account_no`, `booking_contact_mobile_number`, `email_address_for_invoice_1`, `email_address_for_invoice_2`, `full_collection_company_name`, `full_address_for_collection`, `collection_postcode`, `collection_contact_name`, `collection_contact_phone_number`, `collection_contact_email_address`, `collection_time`, `image_required`, `full_delivery_company_name`, `full_address_for_delivery`, `delivery_postcode`, `delivery_contact_name`, `delivery_contact_phone_number`, `delivery_contact_mobile_number`, `delivery_contact_email_address`, `delivery_company_close_time`,`money`,`distant`, `full_description_of_goods`, `length`, `width`, `height`, `depth`, `weight`) VALUES ('".$_POST['cartname']."', '".$_POST['address1']."', '".$value['package']."', '".$value['from']."', '".$value['to']."', '".$value['type']."', '".$value['twoman']."', '".date("y-m-d", strtotime($value['date']))."', '".$value['instruction']."', '".$value['invoice_company_name']."', '".$value['booking_contact_name']."', '".$value['invoice_company_account_no']."', '".$value['booking_contact_mobile_number']."', '".$value['email_address_for_invoice_1']."', '".$value['email_address_for_invoice_2']."', '".$value['full_collection_company_name']."', '".$value['full_address_for_collection']."', '".$value['collection_postcode']."', '".$value['collection_contact_name']."', '".$value['collection_contact_phone_number']."', '".$value['collection_contact_email_address']."', '".$value['collection_time']."', '".$value['image_required']."', '".$value['full_delivery_company_name']."', '".$value['full_address_for_delivery']."', '".$value['delivery_postcode']."', '".$value['delivery_contact_name']."', '".$value['delivery_contact_phone_number']."', '".$value['delivery_contact_mobile_number']."', '".$value['delivery_contact_email_address']."', '".$value['delivery_company_close_time']." ', '".calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])."','".get_distance($value['type'],$value['to'],$value['from'])."', '".$value['full_description_of_goods']."', '".$value['length']."', '".$value['width']."', '".$value['height']."', '".$value['depth']."', '".$value['weight']."') ;";
+		   		    	$query = "INSERT INTO `orders`(`fullname`, `address`, `package`, `from`, `to`, `type`, `twoman`, `dtime`, `instruction`, `invoice_company_name`, `booking_contact_name`, `invoice_company_account_no`, `booking_contact_mobile_number`, `email_address_for_invoice_1`, `email_address_for_invoice_2`, `full_collection_company_name`, `full_address_for_collection`, `collection_postcode`, `collection_contact_name`, `collection_contact_phone_number`, `collection_contact_email_address`, `collection_time`, `image_required`, `full_delivery_company_name`, `full_address_for_delivery`, `delivery_postcode`, `delivery_contact_name`, `delivery_contact_phone_number`, `delivery_contact_mobile_number`, `delivery_contact_email_address`, `delivery_company_close_time`,`money`,`distant`, `full_description_of_goods`, `length`, `width`, `height`, `depth`, `weight`) VALUES ('".$_POST['cartname']."', '".$_POST['address1']."', '".$value['package']."', '".$value['from']."', '".$value['to']."', '".$value['type']."', '".$value['twoman']."', '".date("y-m-d", strtotime($value['date']))."', '".$value['instruction']."', '".$value['invoice_company_name']."', '".$value['booking_contact_name']."', '".$value['invoice_company_account_no']."', '".$value['booking_contact_mobile_number']."', '".$value['email_address_for_invoice_1']."', '".$value['email_address_for_invoice_2']."', '".$value['full_collection_company_name']."', '".$value['full_address_for_collection']."', '".$value['collection_postcode']."', '".$value['collection_contact_name']."', '".$value['collection_contact_phone_number']."', '".$value['collection_contact_email_address']."', '".$value['collection_time']."', '".$value['image_required']."', '".$value['full_delivery_company_name']."', '".$value['full_address_for_delivery']."', '".$value['delivery_postcode']."', '".$value['delivery_contact_name']."', '".$value['delivery_contact_phone_number']."', '".$value['delivery_contact_mobile_number']."', '".$value['delivery_contact_email_address']."', '".$value['delivery_company_close_time']." ', '".calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])."','".round(get_distance($value['type'],$value['to'],$value['from']),0)."', '".$value['full_description_of_goods']."', '".$value['length']."', '".$value['width']."', '".$value['height']."', '".$value['depth']."', '".$value['weight']."') ;";
 
 		   		    	
 
@@ -551,14 +551,14 @@
 								        <div style="margin:5px;width:50%;float:left;">
 								            <label for=""><b>Name:</b><span style="float:right;">'.urldecode($_POST['cartname']).' </span></label><br />
 								            <label for=""><b>From:</b><span style="float:right;">'.urldecode($value['from']).'</span></label><br />
-								            <label for=""><b>Package:</b><span style="float:right;">'.urldecode($value['package']).'</span></label><br />
-								            <label for=""><b>Distance:</b><span style="float:right;">'.urldecode(get_distance($value['type'],$value['to'],$value['from'])).'</span></label><br />
+								            <label for=""><b>Package Description:</b><span style="float:right;">'.urldecode($value['package']).'</span></label><br />
+								            <label for=""><b>Distance:</b><span style="float:right;">'.urldecode(round(get_distance($value['type'],$value['to'],$value['from']),0)).'</span></label><br />
 								        </div>
 								        <div style="margin:5px;width:50%;float:right;">
 								            <label for=""><b>Billing Address:</b><span style="float:right;">'.urldecode($_POST['address1']).'</span></label><br />
 								            <label for=""><b>To:</b><span style="float:right;">'.urldecode($value['to']).'</span></label><br />
-								            <label for=""><b>Date:</b><span style="float:right;">'.urldecode($value['date']).'</span></label><br />
-								            <label for=""><b>Cost:</b><span style="float:right;">'.urldecode(calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])).'</span>GBP</label><br />
+								            <label for=""><b>Date:</b><span style="float:right;">'.date("d/m/Y", strtotime(urldecode($value['date']))).'</span></label><br />
+								            <label for=""><b>Cost:</b><span style="float:right;">'.urldecode(calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])).' GBP</span></label><br />
 								        </div>
 								    </div>
 								    
@@ -599,7 +599,42 @@
 						            </table>
 						            </body>
 						            </html>';
-						
+						$message_customer = '<html>
+						            <head>
+						            <meta charset="utf-8">
+						            <title>Admin Confirmation Of Booking</title>
+						            </head>
+						            <body>
+						            <table width="650" border="1" align="center" cellpadding="0" cellspacing="0">
+									  <tr>
+									    <td><table width="650" border="0" cellspacing="0" cellpadding="0">
+									      <tr>
+									        <td align="center"><img src="http://firminxpress.com/email/cust1.jpg" width="650" height="193"  alt=""/></td>
+									      </tr>
+									      <tr>
+									        <td align="center"><img src="http://firminxpress.com/email/cust2.jpg" width="650" height="213"  alt=""/></td>
+									      </tr>
+									      <tr>
+									        <td>&nbsp;</td>
+									      </tr>
+									      <tr>
+									        <td><table width="610" border="0" align="center" cellpadding="0" cellspacing="0">
+									          <tr>
+									            <td style="font-family: Arial, "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, sans-serif">'.$content.'
+									          </tr>
+									        </table></td>
+									      </tr>
+									      <tr>
+									        <td>&nbsp;</td>
+									      </tr>
+									      <tr>
+									        <td align="center"><img src="http://firminxpress.com/email/cust3.jpg" width="650" height="164"  alt=""/></td>
+									      </tr>
+									    </table></td>
+									  </tr>
+									</table>
+						            </body>
+						            </html>';
 						$to = urldecode($value['email_address_for_invoice_2']);
 						$subject = "Admin Confirmation Of Booking";
 						
@@ -607,7 +642,7 @@
 
 						$headers .= "Content-Type: text/html;charset=iso-8859-1\r\n";
 						$headers  .= 'MIME-Version: 1.0' . "\r\n";
-						mail($to,$subject,$message,$headers);
+						mail($to,$subject,$message_customer,$headers);
 						mail('simon@kilocreative.com',$subject,$message,$headers);
 					}
 

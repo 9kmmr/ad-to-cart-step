@@ -5,181 +5,212 @@
 	
 
 	$count=0;
-	 $cookie_name = "cart_data";
-	if (isset($_POST['dfrom'])){
+	$cookie_name = "cart_data";
 
-            $name = urlencode($_POST['package']);
+	if(isset($_POST['payment'])){
+  
+	  	$response = $_POST["g-recaptcha-response"];
 
-            $from = urlencode($_POST['dfrom']);
+	  	$url = 'https://www.google.com/recaptcha/api/siteverify';
+	  	$data = array(
+	    	'secret' => '6LegeyUUAAAAAD96XEnoVw44JBcJdaD9rR_ORZeD',
+	    	'response' => $_POST["g-recaptcha-response"]
+	  	);
+	  	$options = array(
+	    	'http' => array (
+	      		'method' => 'POST',
+	      		'content' => http_build_query($data)
+	    	)
+	  	);
+	  	$context  = stream_context_create($options);
+	  	$verify = file_get_contents($url, false, $context);
+	  	$captcha_success=json_decode($verify);
 
-            $to =   urlencode(trim($_POST['dto']));
+	  	if ($captcha_success->success==false) {
 
-            $type = $_POST['vehicle'];
+	  		header('Location: ' . $_SERVER['HTTP_REFERER'] . '&captcha=false');
 
-            $twoman = ($_POST['twoman']=='yes' ) ? 'yes' : 'no';
+	  	} else if ($captcha_success->success==true) {
+	    	
+			if (isset($_POST['dfrom'])){
 
-            $date = trim($_POST['date']);
+				$transaction = $_POST['transaction'];
 
-            $hour = $_POST['time_pick'];
+	            $name = urlencode($_POST['package']);
 
-            $minute = $_POST['time_mins'];
+	            $from = urlencode($_POST['dfrom']);
 
-            $instruction = urlencode($_POST['instruction']);
+	            $to =   urlencode(trim($_POST['dto']));
 
-            $invoice_company_name               = urlencode($_POST['invoice_company_name']);
+	            $type = $_POST['vehicle'];
 
-            $booking_contact_name               = urlencode($_POST['booking_contact_name']);
+	            $twoman = ($_POST['twoman']=='yes' ) ? 'yes' : 'no';
 
-            $invoice_company_account_no         = urlencode($_POST['invoice_company_account_no']);
+	            $date = trim($_POST['date']);
 
-            $booking_contact_mobile_number      = urlencode($_POST['booking_contact_mobile_number']);
+	            $hour = $_POST['time_pick'];
 
-            $email_address_for_invoice_1        = urlencode($_POST['email_address_for_invoice_1']);
+	            $minute = $_POST['time_mins'];
 
-            $email_address_for_invoice_2        = urlencode($_POST['email_address_for_invoice_2']);
+	            $instruction = urlencode($_POST['instruction']);
 
-            $full_collection_company_name       = urlencode($_POST['full_collection_company_name']);
+	            $invoice_company_name               = urlencode($_POST['invoice_company_name']);
 
-            $full_address_for_collection        = urlencode($_POST['full_address_for_collection']);
+	            $booking_contact_name               = urlencode($_POST['booking_contact_name']);
 
-            $collection_postcode                = urlencode($_POST['collection_postcode']);
+	            $invoice_company_account_no         = urlencode($_POST['invoice_company_account_no']);
 
-            $collection_contact_name            = urlencode($_POST['collection_contact_name']);
+	            $booking_contact_mobile_number      = urlencode($_POST['booking_contact_mobile_number']);
 
-            $collection_contact_phone_number    = urlencode($_POST['collection_contact_phone_number']);
+	            $email_address_for_invoice_1        = urlencode($_POST['email_address_for_invoice_1']);
 
-            $collection_contact_email_address   = urlencode($_POST['collection_contact_email_address']);
+	            $email_address_for_invoice_2        = urlencode($_POST['email_address_for_invoice_2']);
 
-            $collection_time                    = urlencode($_POST['collection_time']);
+	            $full_collection_company_name       = urlencode($_POST['full_collection_company_name']);
 
-            $image_required                     = urlencode($_POST['image_required']);
+	            $full_address_for_collection        = urlencode($_POST['full_address_for_collection']);
 
-            $full_delivery_company_name         = urlencode($_POST['full_delivery_company_name']);
+	            $collection_postcode                = urlencode($_POST['collection_postcode']);
 
-            $full_address_for_delivery          = urlencode($_POST['full_address_for_delivery']);
+	            $collection_contact_name            = urlencode($_POST['collection_contact_name']);
 
-            $delivery_postcode                  = urlencode($_POST['delivery_postcode']);
+	            $collection_contact_phone_number    = urlencode($_POST['collection_contact_phone_number']);
 
-            $delivery_contact_name              = urlencode($_POST['delivery_contact_name']);
+	            $collection_contact_email_address   = urlencode($_POST['collection_contact_email_address']);
 
-            $delivery_contact_phone_number      = urlencode($_POST['delivery_contact_phone_number']);
+	            $collection_time                    = urlencode($_POST['collection_time']);
 
-            $delivery_contact_mobile_number     = urlencode($_POST['delivery_contact_mobile_number']);
+	            $image_required                     = urlencode($_POST['image_required']);
 
-            $delivery_contact_email_address     = urlencode($_POST['delivery_contact_email_address']);
+	            $full_delivery_company_name         = urlencode($_POST['full_delivery_company_name']);
 
-            $delivery_company_close_time        = urlencode($_POST['delivery_company_close_time']);
+	            $full_address_for_delivery          = urlencode($_POST['full_address_for_delivery']);
 
-        	$full_description_of_goods = urlencode($_POST['full_description_of_goods']);
+	            $delivery_postcode                  = urlencode($_POST['delivery_postcode']);
 
-        	$length = urlencode($_POST['length']);
+	            $delivery_contact_name              = urlencode($_POST['delivery_contact_name']);
 
-        	$width = urlencode($_POST['width']);
+	            $delivery_contact_phone_number      = urlencode($_POST['delivery_contact_phone_number']);
 
-        	$height = urlencode($_POST['height']);
+	            $delivery_contact_mobile_number     = urlencode($_POST['delivery_contact_mobile_number']);
 
-        	$depth = urlencode($_POST['depth']);
+	            $delivery_contact_email_address     = urlencode($_POST['delivery_contact_email_address']);
 
-        	$weight = urlencode($_POST['weight']);
+	            $delivery_company_close_time        = urlencode($_POST['delivery_company_close_time']);
 
-            $money = 1234;
+	        	$full_description_of_goods = urlencode($_POST['full_description_of_goods']);
 
+	        	$length = urlencode($_POST['length']);
 
-            $_SESSION['data'][count($_SESSION['data'])] = 
+	        	$width = urlencode($_POST['width']);
 
-             [
+	        	$height = urlencode($_POST['height']);
 
-                   'id'                                => (count($_SESSION['data'])+1),
+	        	$depth = urlencode($_POST['depth']);
 
-                   'package'                           => $name,
+	        	$weight = urlencode($_POST['weight']);
 
-                   'from'                              => $from, 
+	            $money = 1234;
 
-                   'to'                                => $to,
 
-                   'type'                              => $type,
+	            $_SESSION['data'][count($_SESSION['data'])] = 
 
-                   'twoman'                            => $twoman,
+	             [
 
-                   'money'                             => $money,
+	                   'id'                                => (count($_SESSION['data'])+1),
 
-				   
+	                   'package'                           => $name,
 
-                   'date'                              => $date,
+	                   'from'                              => $from, 
 
-                   'hour'                              => $hour,
+	                   'to'                                => $to,
 
-                   'minute'                            => $minute,
+	                   'type'                              => $type,
 
-                   'instruction'                       => $instruction,
+	                   'twoman'                            => $twoman,
 
-                   'invoice_company_name'              => $invoice_company_name,
+	                   'money'                             => $money,
 
-                   'booking_contact_name'              => $booking_contact_name,
+					   'transaction'						=> $transaction,
 
-                   'invoice_company_account_no'        => $invoice_company_account_no,
+	                   'date'                              => $date,
 
-                   'booking_contact_mobile_number'     => $booking_contact_mobile_number,
+	                   'hour'                              => $hour,
 
-                   'email_address_for_invoice_1'       => $email_address_for_invoice_1,
+	                   'minute'                            => $minute,
 
-                   'email_address_for_invoice_2'       => $email_address_for_invoice_2,
+	                   'instruction'                       => $instruction,
 
-                   'full_collection_company_name'      => $full_collection_company_name,
+	                   'invoice_company_name'              => $invoice_company_name,
 
-                   'full_address_for_collection'       => $full_address_for_collection,
+	                   'booking_contact_name'              => $booking_contact_name,
 
-                   'collection_postcode'               => $collection_postcode,
+	                   'invoice_company_account_no'        => $invoice_company_account_no,
 
-                   'collection_contact_name'           => $collection_contact_name,
+	                   'booking_contact_mobile_number'     => $booking_contact_mobile_number,
 
-                   'collection_contact_phone_number'   => $collection_contact_phone_number,
+	                   'email_address_for_invoice_1'       => $email_address_for_invoice_1,
 
-                   'collection_contact_email_address'  => $collection_contact_email_address,
+	                   'email_address_for_invoice_2'       => $email_address_for_invoice_2,
 
-                   'collection_time'                   => $collection_time,
+	                   'full_collection_company_name'      => $full_collection_company_name,
 
-                   'image_required'                    => $image_required,
+	                   'full_address_for_collection'       => $full_address_for_collection,
 
-                   'full_delivery_company_name'        => $full_delivery_company_name,
+	                   'collection_postcode'               => $collection_postcode,
 
-                   'full_address_for_delivery'         => $full_address_for_delivery,
+	                   'collection_contact_name'           => $collection_contact_name,
 
-                   'delivery_postcode'                 => $delivery_postcode,
+	                   'collection_contact_phone_number'   => $collection_contact_phone_number,
 
-                   'delivery_contact_name'             => $delivery_contact_name,
+	                   'collection_contact_email_address'  => $collection_contact_email_address,
 
-                   'delivery_contact_phone_number'     => $delivery_contact_phone_number,
+	                   'collection_time'                   => $collection_time,
 
-                   'delivery_contact_mobile_number'    => $delivery_contact_mobile_number,
+	                   'image_required'                    => $image_required,
 
-                   'delivery_contact_email_address'    => $delivery_contact_email_address,
+	                   'full_delivery_company_name'        => $full_delivery_company_name,
 
-                   'delivery_company_close_time'       => $delivery_company_close_time,
+	                   'full_address_for_delivery'         => $full_address_for_delivery,
 
-                   'full_description_of_goods'			=> $full_description_of_goods,
+	                   'delivery_postcode'                 => $delivery_postcode,
 
-                   'length' 							=>	$length,
+	                   'delivery_contact_name'             => $delivery_contact_name,
 
-                   'width' 								=>	$width,
+	                   'delivery_contact_phone_number'     => $delivery_contact_phone_number,
 
-                   'height' 							=>	$height,
+	                   'delivery_contact_mobile_number'    => $delivery_contact_mobile_number,
 
-                   'depth' 								=>	$depth,
-                   
-                   'weight' 							=> $weight
+	                   'delivery_contact_email_address'    => $delivery_contact_email_address,
 
+	                   'delivery_company_close_time'       => $delivery_company_close_time,
 
+	                   'full_description_of_goods'			=> $full_description_of_goods,
 
-             ];
+	                   'length' 							=>	$length,
 
-            /*$cookie_name = "cart_data";
+	                   'width' 								=>	$width,
 
-            $cookie_value = $_SESSION['data'];       
+	                   'height' 							=>	$height,
 
-            setcookie($cookie_name, base64_encode(serialize($cookie_value)), time() + (86400), "/"); // 86400 = 1 day*/
+	                   'depth' 								=>	$depth,
+	                   
+	                   'weight' 							=> $weight
 
-        }
+
+
+	             ];
+
+	            /*$cookie_name = "cart_data";
+
+	            $cookie_value = $_SESSION['data'];       
+
+	            setcookie($cookie_name, base64_encode(serialize($cookie_value)), time() + (86400), "/"); // 86400 = 1 day*/
+
+	        }
+	  	}
+	}
+
 
 	// delete cart
 
@@ -296,7 +327,7 @@
 
     
 
-    
+    // calculate distance
 	function get_distance($vehicle,$addTo,$addFrom){
 		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
@@ -399,8 +430,8 @@
 
 	}
 
-
-		function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
+	// calculate money cost
+	function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
 
 			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
@@ -707,7 +738,287 @@
 
 			return $total_val;
 
-		}
+	}
+
+	function calculate_real($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
+
+			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
+
+			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
+
+			if ($mysqli->connect_errno) {
+
+				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+
+			}
+
+			$addressFrom = urlencode($addFrom);
+
+			$addressTo = urlencode(trim($addTo));
+
+			$rjourny = '';
+
+			/*this is addressTo */
+			$str_adrsz_to = preg_replace('/[+]/s','', $addressTo);
+			$str_count_addr5 = strlen($str_adrsz_to);
+			if($str_count_addr5 == 1){
+				$deduct = 0;
+			}else if($str_count_addr5 == 2){
+				$deduct = 0;
+			}else if($str_count_addr5 == 3){
+				$deduct = 0;
+			}else if($str_count_addr5 == 4){
+				$deduct = 1;
+			}else if($str_count_addr5 == 5){
+				$deduct = 2;
+			}else if($str_count_addr5 == 6){
+				$deduct = 3;
+			}else if($str_count_addr5 == 7){
+				$deduct = 4;
+			}
+			$str_count_addr3 = $str_count_addr5-$deduct;
+			$cutaddressTo = substr($str_adrsz_to,0,$str_count_addr3);
+			/*this is addressTo */
+
+			/*this is addressfrom */
+
+			$str_adrsz_from = preg_replace('/[+]/s','', $addressFrom);
+			
+			$str_count_addr = strlen($str_adrsz_from);
+			$str_count_addr2 = $str_count_addr-3;
+
+			$cutaddressFrom = substr($str_adrsz_from,0,$str_count_addr2);
+				
+
+			/*this is addressfrom */
+			//echo "<br />";
+			$quwery = "SELECT * FROM collection_surcharge where vehicle_id='$vehicle' AND postal_codes = '$cutaddressFrom'";
+			$query_check_collectionsurcharge = mysqli_query($mysqli,$quwery);
+			$fetch_collectionsurcharge = mysqli_fetch_array($query_check_collectionsurcharge);
+
+			$get_rows_count_collection = mysqli_num_rows($query_check_collectionsurcharge);
+			$msg="";
+
+			$clen = strlen($cutaddressFrom);
+			
+			$allow_from_other_collection = true;
+
+			$query_allow_get = "SELECT allow_other_collection FROM  col_option WHERE id=1 ; ";
+			$allow_value = mysqli_fetch_array(mysqli_query($mysqli,$query_allow_get));
+			$allow_from_other_collection = ($allow_value['allow_other_collection']== 1 ) ? true :false ; 
+			
+			if((!$get_rows_count_collection) && $allow_from_other_collection){
+
+				while((!$get_rows_count_collection) && ($clen >= 0) ){
+					$cutaddressFrom2 = substr($cutaddressFrom,0,$clen);
+					
+					$quwery2 = "SELECT * FROM collection_surcharge where postal_codes like '%$cutaddressFrom2%'";
+					$query_check_collectionsurcharge = mysqli_query($mysqli,$quwery2);
+					$fetch_collectionsurcharge = mysqli_fetch_array($query_check_collectionsurcharge);
+
+					$get_rows_count_collection = mysqli_num_rows($query_check_collectionsurcharge);	
+					$clen = $clen-1;
+				}
+
+				$msg = "Surcharge fee for ".$cutaddressFrom." not active in database.<br>";
+			}		
+
+			$collection_surcharge = $fetch_collectionsurcharge['price'];
+			if($clen <=1) $collection_surcharge = 0;
+
+			$date = trim($date);
+			$timstamp = strtotime($date);
+			$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$addressFrom&destinations=$addressTo&language=en-EN&sensor=false");
+			$data = json_decode($data);
+			$time_pick = $time_pick;
+			$time = 0;
+			$distance = 0;
+			
+			foreach($data->rows[0]->elements as $road) {
+				$time += $road->duration->value;
+				$distance += $road->distance->value;
+			}
+			//echo "Total Miles:";
+			$mile = round($distance/1609.34,2);
+			//echo "<br />";
+
+			/*mileage threshold */
+			$query_get_threshold = mysqli_query($mysqli,"SELECT * FROM mileage_threshold WHERE mileage_threshold.range_from < $mile AND $mile <= mileage_threshold.range_to");
+			$cound_rows = mysqli_num_rows($query_get_threshold);
+			if($cound_rows > 0){
+				$fetch_mileage_threshold = mysqli_fetch_array($query_get_threshold);
+
+				/*current threshold id from range get */
+				$current_rangefrom_id = $fetch_mileage_threshold['threshold_id'];
+				/*current threshold id from range get */
+
+				$get_all_thresholds = mysqli_query($mysqli,"SELECT * FROM mileage_threshold WHERE threshold_id < $current_rangefrom_id order by threshold_id desc limit 1");
+				$fetch_all_threshold = mysqli_fetch_array($get_all_thresholds);
+
+				/*current get_excess miles no */
+				$mile_range = $fetch_all_threshold['range_to'];
+				$excess_mile_no = $mile-$mile_range;
+
+				/* get excess miles price count */
+				$cost_dec_pmile = $fetch_mileage_threshold['cost_per_mile_decrease'];
+				$get_last_mile_addition_value = round($excess_mile_no*$fetch_mileage_threshold['cost_per_mile_decrease'],2);
+				$get_prev_miles_count = mysqli_query($mysqli,"SELECT * FROM mileage_threshold WHERE threshold_id < $current_rangefrom_id");
+				$prev_mile_range_count = 0;
+
+				while($fetch_prev_miles_count = mysqli_fetch_array($get_prev_miles_count)){
+					$a += $fetch_prev_miles_count['cost_per_mile_decrease']*50;
+				}
+				//echo $a;
+				$total_cost_decs = round($a+$get_last_mile_addition_value,2);
+			}else{
+				$total_cost_decs = 0;
+			}
+			/*mileage threshold*/
+
+			//echo $total_cost_decs;
+			//echo "<br />";
+
+			$rdata = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$addressFrom&destinations=$addressTo&language=en-EN&sensor=false");
+			$rdata = json_decode($rdata);
+			$rdistance = 0;
+			foreach($rdata->rows[0]->elements as $rroad) {
+				$rdistance += $rroad->distance->value;
+			}
+			//echo "Total Return journey miles :";
+			$zmile = round($rdistance/1609.34,2);
+			/*mileage threshold */
+			$query_get_thresholdz = mysqli_query($mysqli,"SELECT * FROM mileage_threshold WHERE mileage_threshold.range_from < $zmile AND $zmile <= mileage_threshold.range_to");
+			$cound_rowsz = mysqli_num_rows($query_get_thresholdz);
+			if($cound_rowsz > 0){
+				$fetch_mileage_thresholdz = mysqli_fetch_array($query_get_thresholdz);
+				$cost_dec_pmilez = $fetch_mileage_thresholdz['cost_per_mile_decrease'];
+				$total_cost_decsz = round($zmile*$fetch_mileage_thresholdz['cost_per_mile_decrease'],2);
+			}else{
+				$total_cost_decsz = 0;
+			}
+			/*mileage threshold*/
+	
+			$get_all_details = mysqli_query($mysqli,"SELECT * FROM vehicle_options, vat_tax, min_charge, fuel_surcharge,  free_miles, charge_permile, extra_fare WHERE vehicle_options.vehicle_id='$vehicle' AND vat_tax.	vat_tax_vehicle='$vehicle' AND min_charge.vehicle_id='$vehicle' AND fuel_surcharge.fuel_surcharge_vehicle='$vehicle' AND free_miles.free_mile_vechile='$vehicle' AND extra_fare.vehicle_id='$vehicle' AND charge_permile.charge_permile_vehicle='$vehicle'");
+			$fetch_all_details = mysqli_fetch_array($get_all_details);
+
+
+				
+			$rmile = round($zmile-$fetch_all_details['free_mile_no'],2);
+			$original_mile = round($mile-$fetch_all_details['free_mile_no'],2);
+
+			$check_weekends = date("w",$timstamp);
+			if($check_weekends == 0){
+				$min_charge = $fetch_all_details['hprice'];
+			}else{
+				$min_charge = $fetch_all_details['min_charge_price'];
+			}
+				//echo $min_charge;
+				//echo $charge_mile = $min_charge+round(($fetch_all_details['charge_permile_price']*$original_mile)-$total_cost_decs,2);
+			$charge_mile = round($fetch_all_details['charge_permile_price']*$original_mile,2);
+				/* return journey */
+				//$rcharge_mile = $min_charge+round(($fetch_all_details['charge_permile_price']*$rmile)-$total_cost_decsz,2);
+			$rcharge_mile = round($fetch_all_details['charge_permile_price']*$rmile,2);
+				/* return journey */
+			if($vehicle == 1){
+				$surcharge_fetch_value = 1;
+			}else if($vehicle == 2){
+				$surcharge_fetch_value = 2;
+			}else if($vehicle == 3){
+				$surcharge_fetch_value = 3;
+			}
+
+			$get_surcharge_val = mysqli_query($mysqli,"SELECT * FROM fuel_surcharge WHERE fuel_surcharge_vehicle='$surcharge_fetch_value'");
+			$fetch_perce_surchar = mysqli_fetch_array($get_surcharge_val);
+
+			$surcharge_percentage = $fetch_perce_surchar['fuel_surcharge_amt']/100;
+
+			//$surcharge = ($charge_mile+$fetch_all_details['min_charge_price'])*$surcharge_percentage;
+			$rsurcharge = ($rcharge_mile+$fetch_all_details['min_charge_price'])*$surcharge_percentage;
+			$tax = ($charge_mile+$fetch_all_details['min_charge_price'])*0.2;
+			$rtax = ($rcharge_mile)*0.2;
+
+
+			if($min_charge > $charge_mile){
+				$newcharge_mile = $min_charge;
+			}else{
+					$newcharge_mile = $charge_mile;
+			}
+
+			//0-sunday , 6-saturday
+			$check_weekends = date("w",$timstamp);
+			if($check_weekends == 0){
+					$weekend_fare = ($newcharge_mile)*($fetch_all_details['weekends_fare']/100);
+					$rweekend_fare = ($newcharge_mile)*($fetch_all_details['weekends_fare']/100);
+			}
+			else{
+				$weekend_fare = "0"; //(this is percentage muli
+				$rweekend_fare = "0";
+			}
+
+			// check night time between 6pm - 5am
+			if($time_pick == '18' || $time_pick == '19' || $time_pick == '20' || $time_pick == '21' || $time_pick == '22' || $time_pick == '23' || $time_pick == '24' || $time_pick == '01' || $time_pick == '02' || $time_pick == '03' || $time_pick == '04' || $time_pick == '05'){
+				$timefare = ($newcharge_mile)*($fetch_all_details['night_fare']/100);
+				$rtimefare = ($newcharge_mile)*($fetch_all_details['night_fare']/100);
+			}else{
+				$timefare = "0";
+				$rtimefare = "0";
+			}
+
+			//check expeceptional postal codes
+			$query_show_codez = "SELECT * FROM `exceptional_pincodes` WHERE pincodes LIKE '%".$cutaddressTo."%'";
+			$check_postal_codes = mysqli_query($mysqli,$query_show_codez);
+			$get_postal_rows = mysqli_num_rows($check_postal_codes);
+			if($get_postal_rows > 0){
+				//$postal_fare = $charge_mile*0.2;
+				$postal_fare = 35;
+				//$rpostal_fare = $rcharge_mile*0.2;
+			}else{
+				$postal_fare = 0;
+				$rpostal_fare = 0;
+			}
+
+			/*two man option starts */
+
+			if($twoman && $twoman=="yes"){
+				$two_man_getdeet = mysqli_query($mysqli,"SELECT * FROM two_man_option WHERE two_man_vehicleid='$vehicle'");
+				$fetch_two_man = mysqli_fetch_array($two_man_getdeet);
+				$two_man = $fetch_two_man['two_man_price'];
+			}else{
+				$two_man = 0;
+			}
+			/*two man option ends */
+
+			if($get_rows_count_collection > 0){
+
+				if($weekend_fare > 0){
+					if($min_charge > $charge_mile){
+						$newcharge_mile = $min_charge;
+					}else{
+						$newcharge_mile = $charge_mile;
+					}
+				}else{
+					if($min_charge > $charge_mile){
+						$newcharge_mile = $min_charge;
+					}else{
+						$newcharge_mile = $charge_mile;
+					}
+				}				
+				$withoutsurcharge = round($newcharge_mile+$weekend_fare-$total_cost_decs+$timefare+$postal_fare+$two_man+$collection_surcharge,2);
+				$surcharge = $withoutsurcharge*$surcharge_percentage;
+				$withouttax = round($withoutsurcharge+$surcharge,2);				
+					
+				
+				
+				
+			}else{
+
+				$data = "erz";
+
+			}		
+
+			return $withouttax;
+
+	}
 
     get_header();
 
@@ -745,7 +1056,9 @@
 
 
 
-			<th>Total (£)</th>
+			<th>Cost (£)</th>
+
+			<th>Tax (VAT)</th>
 
 			<th>Date</th>
 
@@ -813,8 +1126,8 @@
 
 				<td><?=$show ?></td>				
 
-				<td><?php echo calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman']) ; ?></td>
-
+				<td><?php echo calculate_real($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman']) ; ?></td>
+				<td><?php echo round(calculate_real($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])*0.2,2) ; ?></td>
 				<td><?=date("Y-m-d", strtotime($value['date'])) ?></td>						
 
 			</tr>		
@@ -839,56 +1152,13 @@
 
 	<form action="<?=get_home_url()."/check-out-express" ?>" method="POST">
 
-
-
 		<table>
+		<input type="submit" name="checkout" value="Proceed to Checkout" class="btn btn-success pull-left">	
 
-		<input type="submit" name="checkout" value="Proceed to Checkout" class="btn btn-success pull-left">
-
-		<tbody id="data-cart" style="visibility:hidden;">
-
-			<?php 
-
-			if (count($_SESSION['data'] )>0) {
-
-			foreach ($_SESSION['data']  as $key => $value) {
-
-			?>
-
-			
-
-			<tr>				
-
-				<input type="hidden" name="key[]" value="<?=$key?>">				
-
-				<td><input type="text" name="from[]" value="<?=$value['from']?>" ></td>
-
-				<td><input type="text" name="to[]" value="<?=$value['to']?> "></td>
-
-				<td><input type="text" name="type[]" value="<?=$value['type']?>"></td>
-
-				<td><input type="checkbox" class="checkbox" name="checkbox1[]" value="'yes'" <?=($value['check']=='yes')? 'checked' : '' ?> ><input type="hidden" name="checkbox[]" value="<?=($value['check']=='yes')? 'yes': 'no' ?>" ></td>				
-
-				<td><input type="date" name="date[]" value="<?=$value['date']?>"></td>			
-
-			</tr>		
-
-
-
-			<?php 
-
-			} }?>
-
-		</tbody>
-
-		</table>
-
-		
+		</table>	
 
 	</form>
-
 </div>
-
 <script type="text/javascript">
 
 	$(".checkbox").change(function() {
