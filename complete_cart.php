@@ -1,8 +1,7 @@
 <?php
 
 
-
-function get_distance($vehicle,$addTo,$addFrom){
+function connection(){
 		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
 			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
@@ -10,9 +9,13 @@ function get_distance($vehicle,$addTo,$addFrom){
 			if ($mysqli->connect_errno) {
 
 				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
+				return faLse;
 			}
-
+			else return $mysqli;
+}
+function get_distance($vehicle,$addTo,$addFrom){
+		
+			$mysqli = connection();
 			$addressFrom = urlencode($addFrom);
 
 			$addressTo = urlencode(trim($addTo));
@@ -104,15 +107,7 @@ function get_distance($vehicle,$addTo,$addFrom){
 	}
 	function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
 
-			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
-
-			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
-
-			if ($mysqli->connect_errno) {
-
-				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
-			}
+			$mysqli = connection();
 
 			$addressFrom = urlencode($addFrom);
 
@@ -415,15 +410,7 @@ if (isset($_POST['checkout'])&&isset($_POST['transaction'])){
 		header('Location: ' . get_home_url()."/check-out-express");
 	}
 	else {
-		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
-
-		//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
-
-		if ($mysqli->connect_errno) {
-
-			echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
-		}
+		$mysqli = connection();
 		
 
 		foreach ($_SESSION['data'] as $key => $value) {
@@ -433,6 +420,106 @@ if (isset($_POST['checkout'])&&isset($_POST['transaction'])){
 		   		    	
 		 	
 		   	mysqli_query($mysqli,$query);
+
+		   	$content = '
+								    <div style="max-width:650;width:100%;display:inline-flex">
+								        <div style="margin:5px;width:50%;float:left;">
+								            <label for=""><b>Name:</b><span style="float:right;">'.urldecode($value['booking_contact_name']).' </span></label><br />
+								            <label for=""><b>From:</b><span style="float:right;">'.urldecode($value['from']).'</span></label><br />
+								            <label for=""><b>Package Description:</b><span style="float:right;">'.urldecode($value['package']).'</span></label><br />
+								            <label for=""><b>Distance:</b><span style="float:right;">'.urldecode(round(get_distance($value['type'],$value['to'],$value['from']),0)).'</span></label><br />
+								        </div>
+								        <div style="margin:5px;width:50%;float:right;">
+								            <label for=""><b>Billing Address:</b><span style="float:right;">'.urldecode($value['full_address_for_collection']).'</span></label><br />
+								            <label for=""><b>To:</b><span style="float:right;">'.urldecode($value['to']).'</span></label><br />
+								            <label for=""><b>Date:</b><span style="float:right;">'.date("d/m/Y", strtotime(urldecode($value['date']))).'</span></label><br />
+								            <label for=""><b>Cost:</b><span style="float:right;">'.urldecode(calculate($value['type'],$value['to'],$value['from'],$value['date'],$value['hour'],$value['twoman'])).' GBP</span></label><br />
+								        </div>
+								    </div>
+								    
+								    ';
+								    
+						$message = '<html>
+						            <head>
+						            <meta charset="utf-8">
+						            <title>Admin Confirmation Of Booking</title>
+						            </head>
+						            <body>
+						            <table width="650" border="1" align="center" cellpadding="0" cellspacing="0">
+						            <tr>
+						                <td><table width="650" border="0" cellspacing="0" cellpadding="0">
+						                <tr>
+						                    <td align="center"><img src="http://firminxpress.com/email/admin1.jpg" width="650" height="221"  alt="head"/></td>
+						                </tr>
+						                <tr>
+						                    <td>&nbsp;</td>
+						                </tr>
+						                <tr>
+						                    <td><table width="610" border="0" align="center" cellpadding="0" cellspacing="0">
+						                    <tr>
+						                        <td style="font-family: Arial, "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, sans-serif"> 
+						                            '.$content.'                          
+						                        </td>
+						                    </tr>
+						                    </table></td>
+						                </tr>
+						                <tr>
+						                    <td>&nbsp;</td>
+						                </tr>
+						                <tr>
+						                    <td align="center"><img src="http://firminxpress.com/email/admin2.jpg" width="650" height="164"  alt="foot"/></td>
+						                </tr>
+						                </table></td>
+						            </tr>
+						            </table>
+						            </body>
+						            </html>';
+						$message_customer = '<html>
+						            <head>
+						            <meta charset="utf-8">
+						            <title>Admin Confirmation Of Booking</title>
+						            </head>
+						            <body>
+						            <table width="650" border="1" align="center" cellpadding="0" cellspacing="0">
+									  <tr>
+									    <td><table width="650" border="0" cellspacing="0" cellpadding="0">
+									      <tr>
+									        <td align="center"><img src="http://firminxpress.com/email/cust1.jpg" width="650" height="193"  alt=""/></td>
+									      </tr>
+									      <tr>
+									        <td align="center"><img src="http://firminxpress.com/email/cust2.jpg" width="650" height="213"  alt=""/></td>
+									      </tr>
+									      <tr>
+									        <td>&nbsp;</td>
+									      </tr>
+									      <tr>
+									        <td><table width="610" border="0" align="center" cellpadding="0" cellspacing="0">
+									          <tr>
+									            <td style="font-family: Arial, "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, sans-serif">'.$content.'
+									          </tr>
+									        </table></td>
+									      </tr>
+									      <tr>
+									        <td>&nbsp;</td>
+									      </tr>
+									      <tr>
+									        <td align="center"><img src="http://firminxpress.com/email/cust3.jpg" width="650" height="164"  alt=""/></td>
+									      </tr>
+									    </table></td>
+									  </tr>
+									</table>
+						            </body>
+						            </html>';
+						$to = urldecode($value['email_address_for_invoice_2']);
+						$subject = "Admin Confirmation Of Booking";
+						$subject2 = "Customer Confirmation Of Booking";
+						$headers = "From: xpress@firminxpress.info" . "\r\n";
+
+						$headers .= "Content-Type: text/html;charset=iso-8859-1\r\n";
+						$headers  .= 'MIME-Version: 1.0' . "\r\n";
+						mail($to,$subject2,$message_customer,$headers);
+						mail('simon@kilocreative.com',$subject,$message,$headers);
+					
 
 
 		}

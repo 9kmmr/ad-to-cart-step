@@ -211,7 +211,7 @@
 	  	}
 	}
 
-
+	$transaction = $_SESSION['data'][0]['transaction'];
 	// delete cart
 
 	if (isset($_GET['deleteid'])){
@@ -324,21 +324,24 @@
     	}
 
     }
-
-    
-
-    // calculate distance
-	function get_distance($vehicle,$addTo,$addFrom){
-		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
+    function connection(){
+    		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
 			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
 
 			if ($mysqli->connect_errno) {
 
 				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
+				return false;
 			}
+			else return $mysqli ;
+    }
+    
 
+    // calculate distance
+	function get_distance($vehicle,$addTo,$addFrom){
+		
+			$mysqli  = connection();
 			$addressFrom = urlencode($addFrom);
 
 			$addressTo = urlencode(trim($addTo));
@@ -433,15 +436,7 @@
 	// calculate money cost
 	function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
 
-			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
-
-			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
-
-			if ($mysqli->connect_errno) {
-
-				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
-			}
+			$mysqli =  connection();
 
 			$addressFrom = urlencode($addFrom);
 
@@ -742,15 +737,7 @@
 
 	function calculate_real($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
 
-			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
-
-			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
-
-			if ($mysqli->connect_errno) {
-
-				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
-			}
+			$mysqli = connection();
 
 			$addressFrom = urlencode($addFrom);
 
@@ -1153,6 +1140,7 @@
 	<form action="<?php if ($transaction=="CC") echo get_home_url()."/check-out-express" ; else echo get_home_url()."/complete-checkout";  ?>" method="POST">
 
 		<table>
+		<input type="hidden" name="transaction" value="<?=($transaction=="CC")?'CC':'ACCOUNT' ?>">
 		<input type="submit" name="checkout" value="<?=($transaction=="CC")?'Proceed to Checkout':'Complete Your Orders' ?>" class="btn btn-success pull-left">	
 
 		</table>	

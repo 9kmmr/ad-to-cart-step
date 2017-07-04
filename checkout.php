@@ -9,18 +9,22 @@
 <?php 
 
 	get_header();
-
-	function get_distance($vehicle,$addTo,$addFrom){
-		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
+	function connection(){
+			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
 			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
 
 			if ($mysqli->connect_errno) {
 
 				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+				return false;
 
 			}
-
+			else return $mysqli;
+	}
+	function get_distance($vehicle,$addTo,$addFrom){
+		
+			$mysqli = connection();
 			$addressFrom = urlencode($addFrom);
 
 			$addressTo = urlencode(trim($addTo));
@@ -112,15 +116,7 @@
 	}
 	function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman){
 
-			$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
-
-			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
-
-			if ($mysqli->connect_errno) {
-
-				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
-			}
+			$mysqli = connection();
 
 			$addressFrom = urlencode($addFrom);
 
@@ -519,15 +515,7 @@
 
 		   		    // insert database
 
-		   		    $mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
-
-					//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
-
-					if ($mysqli->connect_errno) {
-
-						echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-
-					}
+		   		    $mysqli = connection();
 
 		   		    foreach ($_SESSION['data'] as $key => $value) {
 
@@ -638,7 +626,7 @@
 						$to = urldecode($value['email_address_for_invoice_2']);
 						$subject = "Admin Confirmation Of Booking";
 						
-						$headers = "From: xpress@firminxpress.info" . "\r\n";
+						$headers = "From: xpress@firminxpress.info" . "\r\n"; 
 
 						$headers .= "Content-Type: text/html;charset=iso-8859-1\r\n";
 						$headers  .= 'MIME-Version: 1.0' . "\r\n";
