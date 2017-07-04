@@ -1,9 +1,5 @@
 <?php 
 
-	
-
-	
-
 	$count=0;
 	$cookie_name = "cart_data";
 	$transaction = "CC";
@@ -293,7 +289,7 @@
 
     }
 	*/
-    function checktype($val){
+function checktype($val){
 
     	switch ($val) {
 
@@ -324,7 +320,7 @@
     	}
 
     }
-    function connection(){
+function connection(){
     		$mysqli = new \mysqli("localhost", "xpress_deepbratt", "Samadder5#", "xpress_delivery");
 
 			//$mysqli = new mysqli("localhost", "root", "", "express_delivery");
@@ -342,7 +338,7 @@
 	
 
 	// calculate money cost
-	function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman,$argu){
+function calculate($vehicle,$addTo,$addFrom,$date,$time_pick,$twoman,$argu){
 
 			$mysqli =  connection();
 
@@ -653,7 +649,7 @@
     get_header();
 
  ?>
-
+<!-- BEGIN HTML -->
  <style type="text/css">
 
 
