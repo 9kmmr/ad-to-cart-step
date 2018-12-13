@@ -1,3 +1,3 @@
 # cart
 
-payment with worldpay example
+ad to cart step and payment with worldpay example
